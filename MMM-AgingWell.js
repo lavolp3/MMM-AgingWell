@@ -8,7 +8,7 @@ Module.register("MMM-AgingWell", {
       "Mattheo": "09.07.2019"
     },
     format: "DD.MM.YYYY",
-    showAgeIn: "years"
+    showAgeIn: "days"
   },
 
   getScripts: function () {
@@ -31,7 +31,7 @@ Module.register("MMM-AgingWell", {
     var birthdays = this.config.birthdays;
     var ages = new Object({});
     for (var name in birthdays) {
-      birthday = moment.duration(moment().diff(moment(birthdays[name], this.config.format))).as(this.config.showAgeIn);
+      birthday = moment.duration(moment().diff(moment(birthdays[name], this.config.format))).as(this.config.showAgeIn).toFixed(0);
       ages[name] = birthday;
     }
     Log.log(this.name + ": " + JSON.stringify(ages));
