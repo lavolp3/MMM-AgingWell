@@ -1,39 +1,49 @@
 Module.register("MMM-AgingWell", {
-  // Default module config.
-  defaults: {
-    birthdays: {
-      "Babsi": "27.11.1984",
-      "Dirki": "24.05.1983",
-      "Johan": "16.09.2015",
-      "Mattheo": "09.07.2019"
+    // Default module config.
+    defaults: {
+        birthdays: {
+            "Donald Duck": "09.07.1934",
+            "Paul McCartney": "18.06.1942",
+            "Archie Mountbatten-Windsor": "06.05.2019"
+        },
+        format: "DD.MM.YYYY",
+        showAgeIn: "days"
     },
-    format: "DD.MM.YYYY",
-    showAgeIn: "days"
-  },
 
-  getScripts: function () {
-    return [
-      'moment.js',
-    ];
-  },
+    getScripts: function () {
+        return [
+            'moment.js',
+        ];
+    },
 
-  start: function () {
-    var wrapper = document.createElement("div");
-    wrapper.id = "wrapper";
-    //return wrapper;
-    this.updateDom();
-  },
+    start: function () {
+        var wrapper = document.createElement("div");
+        wrapper.id = "ages-wrapper";
+        this.updateDom();
+    },
 
 
-  // Override dom generator.
-  getDom: function() {
-    var wrapper = document.getElementById("wrapper");
-    var birthdays = this.config.birthdays;
-    var ages = new Object({});
-    for (var name in birthdays) {
-      birthday = moment.duration(moment().diff(moment(birthdays[name], this.config.format))).as(this.config.showAgeIn).toFixed(0);
-      ages[name] = birthday;
+    // Override dom generator.
+    getDom: function() {
+        var wrapper = document.getElementById("ages-wrapper");
+        var ageTable = document.createElement("table");
+        agesTable.className = "ages-table";
+        var ages = new Object({});
+        for (var name in this.config.birthdays) {
+            var birthday = moment(birthdays[name], this.config.format);
+            var age = moment().diff(birthday, this.config.showAgeIn);
+            ages[name] = age;
+            var tr = document.createElement("tr");
+            var nameTd = document.createElement("td");
+            nameTd.className = "bold";
+            nameTd.innerHTML = name;
+            var ageTd = document.createElement("td");
+            ageTd.innerHTML = age;
+            tr.appendChild(nameTd);
+            tr.appendChild(ageTd);
+            ageTable.appendChild(tr);
+        }
+        Log.log(this.name + ": " + JSON.stringify(ages));
+        wrapper.appendChild(ageTable);
     }
-    Log.log(this.name + ": " + JSON.stringify(ages));
-  }
 });
